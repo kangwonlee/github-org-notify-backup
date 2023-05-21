@@ -3,8 +3,10 @@ import cryptography.fernet as cf
 import getpass
 import pathlib
 
+from typing import Union
 
-def read_key_file_location(config_file=pathlib.Path(".config")) -> pathlib.Path:
+
+def read_key_file_location(config_file:Union[str, pathlib.Path]=pathlib.Path(".config")) -> pathlib.Path:
     """
     키 파일의 위치를 config 파일로 부터 읽습니다.
 
@@ -17,13 +19,16 @@ def read_key_file_location(config_file=pathlib.Path(".config")) -> pathlib.Path:
 
     # 구성 파일 읽기
     assert config_file.exists(), f"config 파일이 존재하지 않습니다: {config_file}"
-    config.read(config_file)
+    config.read(pathlib.Path(config_file))
 
     # 키 파일의 위치 반환
     return pathlib.Path(config["DEFAULT"]["key_file_location"])
 
 
-def write_key_file_location(key_file_location:pathlib.Path, config_file=pathlib.Path(".config")):
+def write_key_file_location(
+        key_file_location:pathlib.Path,
+        config_file:Union[str, pathlib.Path]=pathlib.Path(".config")
+    ):
     """
     키 파일의 위치를 config 파일에 씁니다.
 
@@ -41,7 +46,7 @@ def write_key_file_location(key_file_location:pathlib.Path, config_file=pathlib.
     config["DEFAULT"]["key_file_location"] = str(key_file_location.absolute())
 
     # 구성 파일 쓰기
-    with config_file.open("w") as f:
+    with pathlib.Path(config_file).open("w") as f:
         config.write(f)
 
 
