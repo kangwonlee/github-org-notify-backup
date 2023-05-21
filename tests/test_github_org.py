@@ -1,3 +1,4 @@
+import os
 import pathlib
 import sys
 import tempfile
@@ -14,6 +15,7 @@ sys.path.insert(0, str(root_folder))
 
 
 import github_org as go
+import my_token as mt
 
 
 @pytest.fixture
@@ -54,6 +56,15 @@ def not_so_serious_token() -> str:
 @pytest.fixture
 def not_so_serious_github_id() -> str:
     return "kangwonlee"
+
+
+@pytest.fixture
+def serious_token() -> str:
+    if "GITHUB_TOKEN" in os.environ:
+        return os.environ["GITHUB_TOKEN"]
+    else:
+        os.environ["GITHUB_TOKEN"] = mt.load_token()
+        return os.environ["GITHUB_TOKEN"]
 
 
 @pytest.fixture
@@ -189,3 +200,16 @@ def test_is_repo_exist_with_invalid_token(
         private_org, private_repo,
         token="invalid-token", github_id=not_so_serious_github_id
     ) is False
+
+
+def test_is_repo_exist_with_valid_token(
+        private_org:str, private_repo:str,
+        serious_token:str
+    ):
+    """
+    Test if the function raises an exception for an invalid token.
+    """
+    assert go.is_repo_exist(
+        private_org, private_repo,
+        token=serious_token, github_id=not_so_serious_github_id
+    ) is True
