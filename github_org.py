@@ -24,10 +24,9 @@ def get_github_normal_header() -> Dict[str, str]:
 def get_repo_full_info_list(org:str) -> List[REPO_INFO]:
 
     # 헤더를 설정합니다.
-    headers = get_github_normal_header()
-    headers.update({
-        "Authorization": f"token {get_access_token()}"
-    })
+
+    header = get_github_normal_header()
+    header["Authentication"] = f"token {get_access_token()}"
 
     json_dict = {
         "type": "all",
@@ -39,7 +38,7 @@ def get_repo_full_info_list(org:str) -> List[REPO_INFO]:
     # GitHub API에 요청합니다.
     response = requests.get(
         f"https://api.github.com/orgs/{org}/repos",
-        headers=headers,
+        headers=header,
         params=json_dict,
     )
 
