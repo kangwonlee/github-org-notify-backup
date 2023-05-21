@@ -26,7 +26,7 @@ def read_key_file_location(config_file:Union[str, pathlib.Path]=pathlib.Path(".c
 
 
 def write_key_file_location(
-        key_file_location:pathlib.Path,
+        key_file_location:str,
         config_file:Union[str, pathlib.Path]=pathlib.Path(".config")
     ):
     """
@@ -43,7 +43,7 @@ def write_key_file_location(
     config["DEFAULT"] = {}
 
     # 키 파일의 위치 설정
-    config["DEFAULT"]["key_file_location"] = str(key_file_location.absolute())
+    config["DEFAULT"]["key_file_location"] = key_file_location
 
     # 구성 파일 쓰기
     with pathlib.Path(config_file).open("w") as f:
