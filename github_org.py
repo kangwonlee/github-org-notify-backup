@@ -1,13 +1,12 @@
-import getpass
 import functools
-import os
 import pathlib
 import subprocess
 
-from typing import Dict, List, Tuple, Set
-
+from typing import Dict, List, Set
 
 import requests
+
+import my_token
 
 
 REPO_INFO = Dict[str, str]
@@ -15,15 +14,14 @@ REPO_INFO = Dict[str, str]
 
 @functools.lru_cache(maxsize=1)
 def get_access_token() -> str:
-
-    return getpass.getpass("Access token: ")
+    return my_token.load_token()
 
 
 def get_repo_full_info_list(org:str) -> List[REPO_INFO]:
 
     # 헤더를 설정합니다.
     headers = {
-        # "Authorization": "Bearer {}".format(get_access_token())
+        "Authorization": "Bearer {}".format(get_access_token())
     }
 
     # GitHub API에 요청합니다.
@@ -33,7 +31,6 @@ def get_repo_full_info_list(org:str) -> List[REPO_INFO]:
     )
 
     assert response.ok, f"에러: {response.status_code}"
-
 
     return response.json()
 
