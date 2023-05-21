@@ -34,6 +34,22 @@ def get_repo_full_info_list(org:str) -> List[REPO_INFO]:
     return response.json()
 
 
+def get_repo_name_from_repo_info(repo_info:REPO_INFO) -> str:
+    '''
+    This function will get the name of the GitHub repository from the repository information.
+    이 함수는 저장소 정보에서 GitHub 저장소의 이름을 가져옵니다.
+
+    Args:
+        repo_info (REPO_INFO): 저장소 정보입니다.
+
+
+    Returns:
+        저장소의 이름입니다.
+    '''
+
+    return repo_info['name']
+
+
 def get_committers_emails(repository_name:str) -> Set[str]:
     '''
     This function will get the email addresses of the people who committed to the GitHub repository.
