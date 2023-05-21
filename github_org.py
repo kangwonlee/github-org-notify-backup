@@ -129,6 +129,12 @@ def backup_repo(
     backup_folder = backup_root / org
     backup_folder.mkdir(parents=True, exist_ok=True)
 
+    # Check if the repository exists.
+    assert subprocess.run(
+        ['git', 'ls-remote', f'https://{github_id}:{token}@github.com/{org}/{repo_name}'],
+        check=True,
+    ).returncode == 0
+
     # Clone the repository.
     subprocess.run(
         ['git', 'clone', f'https://{github_id}:{token}@github.com/{org}/{repo_name}'],
