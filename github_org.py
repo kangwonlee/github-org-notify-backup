@@ -61,3 +61,36 @@ def get_committers_emails(repository_name:str) -> Set[str]:
 
     # Extract the committer emails from the response.
     return set(commit['commit']['author']['email'] for commit in response.json())
+
+
+def create_issue(owner:str, repo:str, title:str, body:str, email:str) -> str:
+    '''
+    Creates a new issue in the specified repository 
+        and sends an email notification to the specified email address.
+
+    Args:
+        owner: The owner of the repository.
+        repo: The name of the repository.
+        title: The title of the issue.
+        body: The body of the issue.
+        email: The email address to send the notification to.
+
+    Returns:
+        The ID of the newly created issue.
+    '''
+
+    url = 'https://api.github.com/repos/{owner}/{repo}/issues'.format(owner=owner, repo=repo)
+    headers = {
+        'Authorization': 'Bearer {token}'.format(token=get_access_token()),
+    }
+    data = {
+        'title': title,
+        'body': body,
+        'assignees': [email],
+    }
+
+    response = requests.post(url, headers=headers, data=data)
+
+    assert response.ok, f'Error creating issue: {response.status_code}'
+
+    return response.json()['id']
