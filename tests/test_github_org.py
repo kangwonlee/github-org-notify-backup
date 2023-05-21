@@ -17,6 +17,20 @@ def public_org() -> str:
     return "python"
 
 
+@pytest.fixture
+def public_repo() -> str:
+    return "cpython"
+
+
 def test_get_repo_list(public_org):
     repo_list = go.get_repo_full_info_list(public_org)
     assert len(repo_list) > 0
+
+
+def test_get_committers_emails(public_org, public_repo):
+    repo_list = go.get_repo_full_info_list(public_org)
+
+    repo_name = '/'.join((public_org, public_repo))
+
+    emails = go.get_committers_emails(repo_name)
+    assert len(emails) > 0
