@@ -66,6 +66,9 @@ def encrypt_token(token):
     # 암호화 객체 초기화
     fernet = cf.Fernet(key)
 
+    with read_key_file_location().open('wb') as f:
+        f.write(key)
+
     # 토큰 암호화
     encrypted_token = fernet.encrypt(token.encode())
 
@@ -73,7 +76,7 @@ def encrypt_token(token):
     return encrypted_token
 
 
-def decrypt_token(encrypted_token, key_file=pathlib.Path(".token_key")):
+def decrypt_token(encrypted_token, key_file=read_key_file_location()):
     """
     암호화된 토큰을 해독합니다.
 
@@ -98,7 +101,7 @@ def decrypt_token(encrypted_token, key_file=pathlib.Path(".token_key")):
     return decrypted_token
 
 
-def save_token(token, token_key_file=pathlib.Path(".token_key")):
+def save_token(token, token_file=pathlib.Path(".token")):
     """
     토큰을 파일에 저장합니다.
 
@@ -110,7 +113,7 @@ def save_token(token, token_key_file=pathlib.Path(".token_key")):
     encrypted_token = encrypt_token(token)
 
     # 암호화된 토큰을 파일에 쓰기
-    with token_key_file.open("wb") as f:
+    with token_file.open("wb") as f:
         f.write(encrypted_token)
 
 
@@ -134,7 +137,7 @@ def main():
     # 토큰 입력 받기
     # 토큰을 파일에 저장
     save_token(
-        getpass.getpass("Enter your GitHub token: ")
+        token=getpass.getpass("Enter your GitHub token: "),
     )
 
     print("토큰이 성공적으로 저장되었습니다.")
