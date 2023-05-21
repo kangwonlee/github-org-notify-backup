@@ -37,6 +37,7 @@ def test_get_committers_emails(public_org, public_repo):
     assert len(emails) > 0
 
 
+@pytest.mark.skipif("pytest.mock" not in sys.modules, reason='This test is skipped because of pytest.mock.')
 def test_create_issue_success():
     '''Tests that the `create_issue` function creates a new issue successfully.
 
@@ -64,6 +65,7 @@ def test_create_issue_success():
     assert issue_id == 1234
 
 
+@pytest.mark.skipif("pytest.mock" not in sys.modules, reason='This test is skipped because of pytest.mock.')
 def test_create_issue_failure():
     '''Tests that the `create_issue` function fails if the request fails.
 
