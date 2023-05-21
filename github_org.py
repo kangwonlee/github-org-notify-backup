@@ -17,17 +17,30 @@ def get_access_token() -> str:
     return my_token.load_token()
 
 
+def get_github_normal_header() -> Dict[str, str]:
+    return {"accept": "application/vnd.github.v3+json"}
+
+
 def get_repo_full_info_list(org:str) -> List[REPO_INFO]:
 
     # 헤더를 설정합니다.
-    headers = {
-        "Authorization": "Bearer {}".format(get_access_token())
+    headers = get_github_normal_header()
+    headers.update({
+        "Authorization": f"token {get_access_token()}"
+    })
+
+    json_dict = {
+        "type": "all",
+        "per_page": 100,
+        "visibility": "private",
+        'page': 1,
     }
 
     # GitHub API에 요청합니다.
     response = requests.get(
         f"https://api.github.com/orgs/{org}/repos",
-        headers=headers
+        headers=headers,
+        params=json_dict,
     )
 
     assert response.ok, f"에러: {response.status_code}"
