@@ -116,6 +116,17 @@ def create_issue(owner:str, repo:str, title:str, body:str, email:str) -> str:
     return response.json()['id']
 
 
+def is_repo_exist(org:str, repo_name:str, token:str, github_id:str="kangwonlee") -> bool:
+    '''
+    Check if the repository exists.
+    '''
+
+    return subprocess.run(
+        ['git', 'ls-remote', f'https://{github_id}:{token}@github.com/{org}/{repo_name}'],
+        check=False,
+    ).returncode == 0
+
+
 def backup_repo(
         org:str, repo_name:str,
         backup_root:pathlib.Path,
@@ -129,11 +140,9 @@ def backup_repo(
     backup_folder = backup_root / org
     backup_folder.mkdir(parents=True, exist_ok=True)
 
-    # Check if the repository exists.
-    assert subprocess.run(
-        ['git', 'ls-remote', f'https://{github_id}:{token}@github.com/{org}/{repo_name}'],
-        check=True,
-    ).returncode == 0
+    assert is_repo_exist(org, repo_name, token, github_id=github_id), (
+        f"Repository '{org}/{repo_name}' does not exist."
+    )
 
     # Clone the repository.
     subprocess.run(
