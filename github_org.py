@@ -1,5 +1,9 @@
 import getpass
 import functools
+import os
+import pathlib
+import subprocess
+
 from typing import Dict, List, Tuple, Set
 
 
@@ -110,3 +114,23 @@ def create_issue(owner:str, repo:str, title:str, body:str, email:str) -> str:
     assert response.ok, f'Error creating issue: {response.status_code}'
 
     return response.json()['id']
+
+
+def backup_repo(
+        org:str, repo_name:str,
+        backup_root:pathlib.Path,
+        token:str, github_id:str="kangwonlee"
+    ) -> None:
+    '''
+    git clone the specified repository.
+    '''
+
+    # Create the backup folder.
+    backup_folder = backup_root / org
+    backup_folder.mkdir(parents=True, exist_ok=True)
+
+    # Clone the repository.
+    subprocess.run(
+        ['git', 'clone', f'https://{github_id}:{token}@github.com/{org}/{repo_name}'],
+        cwd=backup_folder,
+    )
