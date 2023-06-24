@@ -76,6 +76,7 @@ def temp_backup_root() -> pathlib.Path:
         yield pathlib.Path(backup_root)
 
 
+@pytest.mark.skipif(not mt.read_key_file_location().exists(), reason=f"No key file at {str(mt.read_key_file_location())}")
 def test_get_repo_list(public_org):
     repo_list = go.get_repo_full_info_list(public_org)
     assert len(repo_list) > 0
@@ -88,6 +89,7 @@ def test_get_committers_emails(public_org, public_repo):
     assert len(emails) > 0
 
 
+@pytest.mark.skipif(not mt.read_key_file_location().exists(), reason=f"No key file at {str(mt.read_key_file_location())}")
 def test_create_issue_success(mocker):
     '''Tests that the `create_issue` function creates a new issue successfully.
 
@@ -202,6 +204,7 @@ def test_is_repo_exist_with_invalid_token(
     ) is False
 
 
+@pytest.mark.skipif(not mt.read_key_file_location().exists(), reason=f"No key file at {str(mt.read_key_file_location())}")
 def test_is_repo_exist_with_valid_token(
         private_org:str, private_repo:str,
         serious_token:str
