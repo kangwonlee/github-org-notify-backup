@@ -68,6 +68,25 @@ def test_gen_org_repo_url__one_org(auth):
 
 
 @pytest.mark.skipif(skip_condition(), reason=skip_message())
+def test_gen_org_repo_url__four_orgs(auth):
+    orgs = ("eca21x", "eca21y", "eca21z", "cpf21d")
+
+    result = tuple(github.gen_org_repo_url(orgs, auth))
+
+    org_repo_list = tuple(
+        filter(
+            lambda s: s[0] in orgs,
+            map(
+                lambda url: up.urlparse(url).path.split('/')[1:3],
+                result
+            )
+        )
+    )
+
+    assert org_repo_list
+
+
+@pytest.mark.skipif(skip_condition(), reason=skip_message())
 def test_get_repo_branches(auth):
     org = "test-github-class-kpu"
     repo = "18pycpp-05"
@@ -87,6 +106,11 @@ def test_get_repo_branches__second_org_repo(auth):
 
     assert "master" in branches, branches
 
+
+@pytest.mark.skipif(skip_condition(), reason=skip_message())
+def test_get_org_repo_list(auth):
+    org = "eca21z"
+    
 
 @pytest.mark.skipif(skip_condition(), reason=skip_message())
 def test_make_delete_a_branch(auth):
