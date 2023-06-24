@@ -1,20 +1,26 @@
 import os
+import pathlib
 import sys
 import urllib.parse as up
 
 import pytest
 
+
+test_file_path = pathlib.Path(__file__)
+test_folder_path = test_file_path.parent.absolute()
+project_folder_path = test_folder_path.parent.absolute()
+
+
 sys.path.insert(
     0,
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            os.pardir,
-        )
-    ),
+    str(project_folder_path),
 )
 
 import github
+
+
+def test_github__has_Github():
+    assert hasattr(github, "Github"), dir(github)
 
 
 @pytest.mark.skipif((os.getenv("GITHUB_TOKEN") is None), reason="Envirnment variable not available")

@@ -1,12 +1,21 @@
 import datetime
-import getpass
 import os
+import pathlib
+import sys
 import time
 import urllib.parse as up
+
 from typing import Dict, List, Tuple
 
 import requests
 import requests.auth as rauth
+
+
+file_path = pathlib.Path(__file__)
+proj_folder = file_path.parent.absolute()
+sys.path.insert(0, str(proj_folder))
+
+import my_token
 
 
 class Github():
