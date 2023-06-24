@@ -171,10 +171,25 @@ def get_clone_url(owner:str, repo_name:str, token:str) -> str:
     return up.urlunparse((scheme, netloc, path, None, None, None))
 
 
+def set_token_env() -> str:
+    """
+    If GITHUB_TOKEN not available from the environment variable
+    read from the encrypted file and set the environment variable
+    """
+    if my_token.read_key_file_location().exists():
+        os.environ["GITHUB_TOKEN"] = my_token.load_token()
+    else:
+        msg = f"key file not found at {str(my_token.read_key_file_location())}"
+        raise NotImplementedError(msg)
+
+
 def get_token() -> str:
+    if "GITHUB_TOKEN" not in os.environ:
+        set_token_env()
+
     assert "GITHUB_TOKEN" in os.environ, dict(os.environ).keys()
-    assert len(os.environ["GITHUB_TOKEN"]), len(os.environ["GITHUB_TOKEN"])
-    return os.environ.get("GITHUB_TOKEN")
+    assert len(os.environ["GITHUB_TOKEN"].strip()), len(os.environ["GITHUB_TOKEN"])
+    return os.environ["GITHUB_TOKEN"]
 
 
 def get_auth(ta_account:str) -> rauth.HTTPBasicAuth:
