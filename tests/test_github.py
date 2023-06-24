@@ -17,13 +17,25 @@ sys.path.insert(
 )
 
 import github
+import my_token
 
 
 def test_github__has_Github():
     assert hasattr(github, "Github"), dir(github)
 
 
-@pytest.mark.skipif((os.getenv("GITHUB_TOKEN") is None), reason="Envirnment variable not available")
+def skip_condition() -> bool:
+    return all((
+        (os.getenv("GITHUB_TOKEN") is None),
+        (not my_token.read_key_file_location().exists()),
+    ))
+
+
+def skip_message() -> str:
+    return "Envirnment variable not available and key file not found"
+
+
+@pytest.mark.skipif(skip_condition(), reason=skip_message())
 def test_get_clone_url(org_emyl_test, repo_emyl_test, token, url_emyl_test):
     result = github.get_clone_url(org_emyl_test, repo_emyl_test, token)
 
@@ -36,7 +48,7 @@ def test_get_clone_url(org_emyl_test, repo_emyl_test, token, url_emyl_test):
     assert token in result_parsed.netloc, "netlog has not token"
 
 
-@pytest.mark.skipif((os.getenv("GITHUB_TOKEN") is None), reason="Envirnment variable not available")
+@pytest.mark.skipif(skip_condition(), reason=skip_message())
 def test_gen_org_repo_url__one_org(auth):
     orgs = ("test-github-class-kpu",)
 
@@ -55,7 +67,7 @@ def test_gen_org_repo_url__one_org(auth):
     assert org_repo_list
 
 
-@pytest.mark.skipif((os.getenv("GITHUB_TOKEN") is None), reason="Envirnment variable not available")
+@pytest.mark.skipif(skip_condition(), reason=skip_message())
 def test_get_repo_branches(auth):
     org = "test-github-class-kpu"
     repo = "18pycpp-05"
@@ -66,7 +78,7 @@ def test_get_repo_branches(auth):
     assert "develop" in branches, branches
 
 
-@pytest.mark.skipif((os.getenv("GITHUB_TOKEN") is None), reason="Envirnment variable not available")
+@pytest.mark.skipif(skip_condition(), reason=skip_message())
 def test_make_delete_a_branch(auth):
     org = "test-github-class-kpu"
     repo = "org-asgn-std-id-01"

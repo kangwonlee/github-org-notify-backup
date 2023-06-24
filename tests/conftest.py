@@ -1,13 +1,30 @@
 import os
+import pathlib
 import random
+import sys
 
 import requests.auth as rauth
-
 import pytest
+
+
+file_path = pathlib.Path(__file__)
+test_folder = file_path.parent.absolute()
+proj_folder = test_folder.parent.absolute()
+
+sys.path.insert(0, str(proj_folder))
+
+
+import my_token
 
 
 @pytest.fixture(scope="session")
 def token():
+    if os.getenv("GITHUB_TOKEN") is None:
+        if my_token.read_key_file_location().exists():
+            os.environ["GITHUB_TOKEN"] = my_token.load_token()
+        else:
+            msg = f"key file not found at {str(my_token.read_key_file_location())}"
+            raise NotImplementedError(msg)
     return os.getenv("GITHUB_TOKEN")
 
 
