@@ -79,6 +79,16 @@ def test_get_repo_branches(auth):
 
 
 @pytest.mark.skipif(skip_condition(), reason=skip_message())
+def test_get_repo_branches__second_org_repo(auth):
+    org = "eca21z"
+    repo = "eca21c-40-200-kangwon-naver"
+
+    branches = github.get_repo_branches(auth, org, repo)
+
+    assert "master" in branches, branches
+
+
+@pytest.mark.skipif(skip_condition(), reason=skip_message())
 def test_make_delete_a_branch(auth):
     org = "test-github-class-kpu"
     repo = "org-asgn-std-id-01"
