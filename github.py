@@ -18,9 +18,6 @@ sys.path.insert(0, str(proj_folder))
 import my_token
 
 
-# TODO: add use my_token
-
-
 class Github():
     """
     Github REST API
