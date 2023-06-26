@@ -6,6 +6,9 @@ import pathlib
 from typing import Union
 
 
+# TODO : replace encrypted file with OSX `security`
+
+
 def read_key_file_location(config_file:Union[str, pathlib.Path]=pathlib.Path(".config")) -> pathlib.Path:
     """
     키 파일의 위치를 config 파일로 부터 읽습니다.
